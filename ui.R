@@ -10,6 +10,7 @@
 library(shiny)
 library(shinythemes)
 library(shinyTime)
+library(leaflet)
 
 defValue = strptime("07:30:00", "%T")
 cities = list("Antibes"=1, "Nice"=2, "Paris"=3, "Sophia"=4)
