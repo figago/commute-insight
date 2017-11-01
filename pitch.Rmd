@@ -1,0 +1,92 @@
+---
+title: "City Mobility Insight"
+author: "Omar Ali Fdal"
+date: "1 November 2017"
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(leaflet)
+library(shiny)
+library(dplyr)
+library(lubridate)
+
+timeFormat <- "%H%M"
+tileUrl <- "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
+
+tt <- read.csv("triptemplates_20171027.csv")
+tt$activeColor <- "blue"
+tt$activeColor[tt$active=="false"] <- "gray"
+tt <- mutate(tt,
+               depDatetimeLocal=parse_date_time(depDatetimeLocal,
+                                                "ymdHMS"),
+               depTime=format(depDatetimeLocal, timeFormat))
+
+```
+
+## City Mobility Insight
+City Mobility Insight is an app that allows a City Transportation Operator to see how are the city commuters distributed, both geographically and temporarilly.
+
+#### Data Source
+The data used is based on an urban carpooling app user base.
+
+## Data Description
+
+- active: Boolean value whether a commuter is active or not.
+- visibility: Categorical variable whether a commuter is driver or passenger.
+- depDatetimeLocal: departure time for the commuter's regular trip.
+- departureLat: departure latitude
+- departureLng: departure longitude
+
+## Map Example: 
+### Paris Commuters between 7am and 8am
+```{r paris, echo=FALSE}
+bounds <- c(2.312082, 48.821456, 2.392082, 48.911456)
+
+minTime <- "07:00"
+maxTime <- "08:00"
+filteredTt <- tt[minTime <= tt$depTime & tt$depTime <= maxTime, ]
+
+leaflet(filteredTt) %>%
+  fitBounds(bounds[1], bounds[2],
+            bounds[3], bounds[4]) %>%
+  addTiles(urlTemplate = tileUrl) %>%
+  addCircleMarkers(lat=~departureLat,
+                 lng=~departureLng,
+                 weight=1,
+                 color=tt$activeColor) %>%
+  addLegend(position="bottomleft",
+            labels=c("Active", "Inactive"),
+            colors=c("blue", "gray"))
+```
+
+## Code Example: Reactive updates
+
+### Define reactive variables
+```{r cars, echo = TRUE, eval=FALSE}
+minDepTime <- reactive({format(input$minDepTime, timeFormat)})
+maxDepTime <- reactive({format(input$maxDepTime, timeFormat)})
+
+filteredTt <- reactive({
+  tt[minDepTime() <= tt$depTime & tt$depTime <= maxDepTime(),] 
+})
+```
+
+### Update outputs based on change in inputs
+```
+  observe({
+    newdata <- filteredTt()
+    leafletProxy("tripMap", data=newdata) %>% 
+      clearMarkers() %>% clearShapes() %>%
+      addCircleMarkers(lat=~departureLat,
+                       lng=~departureLng,
+                       weight=1,
+                       color=tt$activeColor)
+  })
+```
+
+
+
+
+
