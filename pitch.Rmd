@@ -2,7 +2,9 @@
 title: "City Mobility Insight"
 author: "Omar Ali Fdal"
 date: "1 November 2017"
-output: slidy_presentation
+output: 
+  slidy_presentation:
+    theme: "journal"
 ---
 
 ```{r setup, include=FALSE}
@@ -28,7 +30,13 @@ tt <- mutate(tt,
 ## City Mobility Insight
 City Mobility Insight is an app that allows a City Transportation Operator to see how are the city commuters distributed, both geographically and temporarilly.
 
-#### Data Source
+### Context
+This app was developed during the Developing Data Products Coursera Course.
+
+### The Running App
+You can have a look at the app on (https://oalifdal.shinyapps.io/cityMobility/)[https://oalifdal.shinyapps.io/cityMobility/]
+
+### Data Source
 The data used is based on an urban carpooling app user base.
 
 ## Data Description
