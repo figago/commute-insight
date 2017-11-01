@@ -17,13 +17,14 @@ citiesBounds = list("Antibes"=c(7.0755705, 43.567747, 7.155705, 43.597747),
                     "Nice"=c(7.239157, 43.678512, 7.269157, 43.718512),
                     "Paris"=c(2.312082, 48.821456, 2.392082, 48.911456),
                     "Sophia"=c(7.02115, 43.610234, 7.055615, 43.631234))
-                    
+
+tileUrl <- "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
+tt <- read.csv("triptemplates_20171027.csv")
+
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
 
-  tileUrl <- "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
-  tt <- read.csv("triptemplates_20171027.csv")
   
   tt$activeColor <- "blue"
   tt$activeColor[tt$active=="false"] <- "gray"
@@ -75,14 +76,9 @@ shinyServer(function(input, output) {
   
   observe({
     bounds <- citiesBounds[as.integer(city())][[1]]
-    print(city())
-    print(bounds)
-    print(bounds[3])
-    
     leafletProxy("tripMap", data=filteredTt()) %>%
-      # setView(bounds[1], bounds[2], zoom=14)
       fitBounds(bounds[1], bounds[2],
-              bounds[3], bounds[4])      
+                bounds[3], bounds[4])      
   })
        
 })
