@@ -31,7 +31,7 @@ tt <- mutate(tt,
 City Mobility Insight is an app that allows a City Transportation Operator to see how are the city commuters distributed, both geographically and temporarilly.
 
 ### Context
-This app was developed during the Developing Data Products Coursera Course.
+This app was developed during the [Developing Data Products Coursera Course](https://www.coursera.org/learn/data-products).
 
 ### The Running App
 You can have a look at the app on https://oalifdal.shinyapps.io/cityMobility
